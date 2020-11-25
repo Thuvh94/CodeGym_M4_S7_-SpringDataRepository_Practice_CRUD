@@ -1,6 +1,7 @@
 package service;
 
 import model.Customer;
+import model.Province;
 
 public interface CustomerService {
     Iterable<Customer> findAll();
@@ -10,4 +11,6 @@ public interface CustomerService {
     void save(Customer customer);
 
     void remove(Long id);
+
+    Iterable<Customer> findAllByProvince(Province province);
 }

@@ -1,5 +1,6 @@
 package config;
 
+import formatter.ProvinceFormatter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -24,6 +26,8 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import service.CustomerService;
 import service.CustomerServiceImpl;
+import service.ProvinceService;
+import service.ProvinceServiceImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -44,7 +48,12 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         this.applicationContext = applicationContext;
     }
 
-//    @Bean
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new ProvinceFormatter(applicationContext.getBean(ProvinceService.class)));
+    }
+
+    //    @Bean
 //    public CustomerRepository customerRepository(){
 //        return new CustomerRepositoryImpl();
 //    }
@@ -52,6 +61,11 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     @Bean
     public CustomerService customerService(){
         return new CustomerServiceImpl();
+    }
+
+    @Bean
+    public ProvinceService provinceService(){
+        return new ProvinceServiceImpl();
     }
 
 
