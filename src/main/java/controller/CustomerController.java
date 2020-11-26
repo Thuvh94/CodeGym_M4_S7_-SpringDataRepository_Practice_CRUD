@@ -5,7 +5,10 @@ import model.Province;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import service.CustomerService;
@@ -25,6 +28,7 @@ public class CustomerController {
     public Iterable<Province> provinces(){
         return provinceService.findAll();
     }
+
     @GetMapping("/create-customer")
     public ModelAndView showCreateForm(){
         ModelAndView modelAndView = new ModelAndView("/customer/create");
@@ -33,7 +37,11 @@ public class CustomerController {
     }
 
     @PostMapping("/create-customer")
-    public ModelAndView saveCustomer(@ModelAttribute("customer") Customer customer){
+    public ModelAndView saveCustomer(@Validated @ModelAttribute("customer") Customer customer, BindingResult bindingResult){
+        if(bindingResult.hasFieldErrors()){
+            ModelAndView modelAndView = new ModelAndView("/customer/create");
+            return modelAndView;
+        }
         customerService.save(customer);
         ModelAndView modelAndView = new ModelAndView("/customer/create");
         modelAndView.addObject("customer", new Customer());
@@ -41,9 +49,19 @@ public class CustomerController {
         return modelAndView;
     }
 
+//    @PostMapping("/create-customer")
+//    public ModelAndView saveCustomer( @ModelAttribute("customer") Customer customer){
+//        customerService.save(customer);
+//        ModelAndView modelAndView = new ModelAndView("/customer/create");
+//        modelAndView.addObject("customer", new Customer());
+//        modelAndView.addObject("message", "New customer created successfully");
+//        return modelAndView;
+//    }
+
+
     @GetMapping("/customers")
 //    Tham số "s" có kiểu là Optional<String>, nhằm hỗ trợ trường hợp null
-    public ModelAndView listCustomers(@RequestParam("s") Optional<String> s,Pageable pageable){
+    public ModelAndView listCustomers(@RequestParam("s") Optional<String> s, @PageableDefault(size = 5) Pageable pageable ){
         Page<Customer> customers;
         if(s.isPresent()){
             customers = customerService.findAllByFirstNameContaining(s.get(), pageable);
