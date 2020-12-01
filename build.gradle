@@ -26,4 +26,7 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.10.Final'
+    compile group: 'org.springframework', name: 'spring-tx', version: '4.3.17.RELEASE'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.5.3'
 }
